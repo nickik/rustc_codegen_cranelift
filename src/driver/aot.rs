@@ -3,7 +3,7 @@
 
 use std::convert::Infallible;
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufWriter, Write};
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Instant;
@@ -114,8 +114,13 @@ fn emit_module(
         Err(err) => return Err(format!("error creating object file: {}", err)),
     };
 
+    let object_bytes = match product.emit() {
+        Ok(bytes) => bytes,
+        Err(err) => return Err(format!("error writing object file: {}", err)),
+    };
+
     let mut file = BufWriter::new(file);
-    if let Err(err) = product.object.write_stream(&mut file) {
+    if let Err(err) = file.write_all(&object_bytes) {
         return Err(format!("error writing object file: {}", err));
     }
     let file = match file.into_inner() {
