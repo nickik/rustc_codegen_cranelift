@@ -8,17 +8,17 @@ crate-type = ["dylib"]
 
 [dependencies]
 # SIA32 bring-up uses the matching Cranelift fork and its target-lexicon fork.
-# Keep these dependencies on the same git source so Triple/Architecture types
-# are identical across cg_clif and cranelift-codegen.
-cranelift-codegen = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", default-features = false, features = ["std", "timing", "unwind", "sia32"] }
-cranelift-frontend = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend" }
-cranelift-module = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend" }
-cranelift-native = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend" }
+# Keep these dependencies on one immutable source snapshot so Triple/Architecture
+# types and the backend stay reproducible across cg_clif and Cranelift.
+cranelift-codegen = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2", default-features = false, features = ["std", "timing", "unwind", "sia32"] }
+cranelift-frontend = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2" }
+cranelift-module = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2" }
+cranelift-native = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2" }
 # JIT is not part of the SIA R0 goal. Keep the upstream optional dependency so
 # the feature remains well-formed, but don't enable it through unstable-features.
 cranelift-jit = { version = "0.135.0", optional = true }
-cranelift-object = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", default-features = false }
-target-lexicon = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", package = "target-lexicon" }
+cranelift-object = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2", default-features = false }
+target-lexicon = { git = "https://github.com/nickik/crainlift.git", branch = "sia32-backend", rev = "791baec1d77c070812341755560a1c4098ebb2d2", package = "target-lexicon" }
 gimli = { version = "0.33", default-features = false, features = ["write"] }
 # Match the object API used by the retained Cranelift 0.137 source.
 object = { version = "0.40.0", default-features = false, features = ["std", "read_core", "write", "archive", "coff", "elf", "macho", "pe"] }
